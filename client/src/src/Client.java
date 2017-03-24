@@ -6,7 +6,7 @@ import java.net.*;
 public class Client {
 
 	public static final int PORT = 4321;
-	public static final String HOST = "157.253.219.219";
+	public static final String HOST = "127.0.0.1";
 
 	private static Socket socket;
 	private DataInputStream input;
@@ -35,7 +35,7 @@ public class Client {
 		} catch (IllegalArgumentException | NullPointerException | UnknownHostException e) {
 			return "INVALID PARAMETERS. ABORTING CONNECTION";
 		} catch (IOException e) {
-			return "COULD NOT ESTABLISH CONNECITON:\n" + e.getMessage();
+			return "COULD NOT ESTABLISH CONNECITON";
 		}
 	}
 	

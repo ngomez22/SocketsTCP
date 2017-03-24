@@ -12,8 +12,7 @@ public class GUI extends JFrame {
 
 	public GUI () {
 		
-		client = new Client();
-		connection = new Connection();
+		connection = new Connection(this);
 		
 		setSize( 530, 530 );
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
@@ -25,8 +24,16 @@ public class GUI extends JFrame {
 	}
 	
 	public void connect() {
+		client = new Client();
 		String status = client.startConnection();
-		
+		System.out.println(status);
+		connection.changeStatus(status);
+	}
+	
+	public void disconnect() {
+		String status = client.endConnection();
+		System.out.println(status);
+		connection.changeStatus(status);
 	}
 	
 	public static void main(String[] args) {
