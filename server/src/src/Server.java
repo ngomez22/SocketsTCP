@@ -49,7 +49,7 @@ public class Server extends Thread {
 		
 		try {
 			output.writeBytes(getFileNames());
-			input.re
+			//input.re
 			
 //			 FileInputStream fileInputStream = new FileInputStream(largeFile);
 //             OutputStream socketOutputStream = socket.getOutputStream();
