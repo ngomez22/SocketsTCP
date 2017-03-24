@@ -1,9 +1,13 @@
 package src;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class Server extends Thread {
@@ -20,6 +24,7 @@ public class Server extends Thread {
 		clientSocket = cSocket;
 		try {
 			input = new DataInputStream(clientSocket.getInputStream());
+			//input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			output = new DataOutputStream(clientSocket.getOutputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -39,8 +44,27 @@ public class Server extends Thread {
 				}
 			} 
 		}
-		System.out.println("Se enviaron los nombres: "+resp);
 		return resp;
+	}
+	
+	public void sendFile(String pName) {
+		FileInputStream fileInputStream;
+		try {
+			File file = new File("./files/"+pName);
+			fileInputStream = new FileInputStream(file);
+			byte[] buffer = new byte[BUFFER_SIZE];
+			int read;
+			int readTotal = 0;
+			while ((read = fileInputStream.read(buffer)) != -1) {
+				output.write(buffer, 0, read);
+				readTotal += read;
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println("Couldn't find file: "+pName);
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 
@@ -48,70 +72,28 @@ public class Server extends Thread {
 	public void run() {
 		
 		try {
-			output.writeBytes(getFileNames());
-			//input.re
+			output.writeUTF(getFileNames());
+			//output.writeBytes(getFileNames());
+			System.out.println("File names sent");
 			
-//			 FileInputStream fileInputStream = new FileInputStream(largeFile);
-//             OutputStream socketOutputStream = socket.getOutputStream();
-//             long startTime = System.currentTimeMillis();
-//             byte[] buffer = new byte[BUFFER_SIZE];
-//             int read;
-//             int readTotal = 0;
-//             while ((read = fileInputStream.read(buffer)) != -1) {
-//                     socketOutputStream.write(buffer, 0, read);
-//                     readTotal += read;
-//             }
-//			
+			String fileSelected = input.readUTF();
+			System.out.println("User selection: "+fileSelected);
 			
-			
-			
-			
+			sendFile(fileSelected);
+			if(input.readUTF().equals("OK"))
+			{
+				System.out.println("OK");
+			}
+			else
+			{
+				System.out.println("FAIL");
+			}
+			clientSocket.close();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
-//		try { 
-//			
-//			
-//			
-//			
-//			FileWriter out = new FileWriter("test.txt");
-//			BufferedWriter bufWriter = new BufferedWriter(out);
-//
-//			// Step 1 read length
-//			int nb = input.readInt();
-//			System.out.println("Read Length" + nb);
-//			byte[] digit = new byte[nb];
-//			// Step 2 read byte
-//			System.out.println("Writing.......");
-//			for (int i = 0; i < nb; i++)
-//				digit[i] = input.readByte();
-//
-//			String st = new String(digit);
-//			bufWriter.append(st);
-//			bufWriter.close();
-//			System.out.println("receive from : "
-//					+ clientSocket.getInetAddress() + ":"
-//					+ clientSocket.getPort() + " message - " + st);
-//
-//			// Step 1 send length
-//			output.writeInt(st.length());
-//			// Step 2 send length
-//			output.writeBytes(st); // UTF is a string encoding
-//			// output.writeUTF(data);
-//		} catch (EOFException e) {
-//			System.out.println("EOF:" + e.getMessage());
-//		} catch (IOException e) {
-//			System.out.println("IO:" + e.getMessage());
-//		}
-//
-//		finally {
-//			try {
-//				clientSocket.close();
-//			} catch (IOException e) {/* close failed */
-//			}
-//		}
-//
+		//No olvidar cerrar socket
 	}
 
 }
