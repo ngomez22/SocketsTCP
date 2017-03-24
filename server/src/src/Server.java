@@ -30,6 +30,15 @@ public class Server extends Thread {
 			e.printStackTrace();
 		}	
 	}
+	
+	public void handleRequest(String request) {
+		switch(request) {
+			case "GET FILES": sendAvailableFiles();
+			case "DOWNLOAD": sendFile();
+			case "OK": done();
+			default: error();
+		}
+	}
 
 	public String getFileNames() {
 		String resp = "";
@@ -45,6 +54,35 @@ public class Server extends Thread {
 			} 
 		}
 		return resp;
+	}
+	
+	public void sendAvailableFiles() {
+		try {
+			output.writeUTF(getFileNames());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void sendFile() {
+		FileInputStream fileInputStream;
+		try {
+			String pName = input.readUTF();
+			File file = new File("./files/"+pName);
+			fileInputStream = new FileInputStream(file);
+			byte[] buffer = new byte[BUFFER_SIZE];
+			int read;
+			int readTotal = 0;
+			while ((read = fileInputStream.read(buffer)) != -1) {
+				output.write(buffer, 0, read);
+				readTotal += read;
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println("Couldn't find file");
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void sendFile(String pName) {
@@ -67,32 +105,24 @@ public class Server extends Thread {
 		}
 	}
 	
+	public void done() {
+		System.out.println("OK");
+	}
+	
+	public void error() {
+		System.out.println("ERROOOOORRRRRRRR");
+	}
 
 
 	public void run() {
-		
-		try {
-			output.writeUTF(getFileNames());
-			//output.writeBytes(getFileNames());
-			System.out.println("File names sent");
-			
-			String fileSelected = input.readUTF();
-			System.out.println("User selection: "+fileSelected);
-			
-			sendFile(fileSelected);
-			if(input.readUTF().equals("OK"))
-			{
-				System.out.println("OK");
+		while(true) {
+			try {
+				String request = input.readUTF();
+				handleRequest(request);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			else
-			{
-				System.out.println("FAIL");
-			}
-			clientSocket.close();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}		
+		}
 		//No olvidar cerrar socket
 	}
 
