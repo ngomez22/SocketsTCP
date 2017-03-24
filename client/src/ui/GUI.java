@@ -24,6 +24,11 @@ public class GUI extends JFrame {
         add(connection, BorderLayout.NORTH);
 	}
 	
+	public void connect() {
+		String status = client.startConnection();
+		
+	}
+	
 	public static void main(String[] args) {
 		GUI i = new GUI();
 		i.setVisible(true);
