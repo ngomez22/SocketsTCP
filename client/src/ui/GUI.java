@@ -3,16 +3,22 @@ package ui;
 import java.awt.BorderLayout;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import src.Client;
 
 public class GUI extends JFrame {
 	
 	private Client client;
 	private Connection connection;
+	private Files files;
+	private Controls controls;
 
 	public GUI () {
 		
 		connection = new Connection(this);
+		files = new Files(this);
+		controls = new Controls(this);
 		
 		setSize( 530, 530 );
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
@@ -21,6 +27,8 @@ public class GUI extends JFrame {
         setLayout(new BorderLayout());
         
         add(connection, BorderLayout.NORTH);
+        add(files, BorderLayout.CENTER);
+        add(controls, BorderLayout.SOUTH);
 	}
 	
 	public void connect() {

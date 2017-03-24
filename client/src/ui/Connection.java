@@ -21,7 +21,6 @@ public class Connection extends JPanel implements ActionListener {
 		this.gui = gui;
 		setLayout( new BorderLayout() );
 	    setBorder( new TitledBorder( "Connection" ) );
-	    setBackground( Color.WHITE );
 	    
 	    statusLabel = new JLabel("Estado: ");
 	    add(statusLabel, BorderLayout.WEST);

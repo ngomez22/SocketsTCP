@@ -1,5 +1,7 @@
 package ui;
 
-public class Downloadables {
+import javax.swing.JPanel;
+
+public class Downloadables extends JPanel {
 
 }
