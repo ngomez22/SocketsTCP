@@ -11,7 +11,7 @@ public class Client {
 	private static Socket socket;
 	private DataInputStream input;
 	private DataOutputStream output;
-	private static String[] files;
+	private String[] files;
 
 	public void test() throws Exception {
 		// Initialize socket

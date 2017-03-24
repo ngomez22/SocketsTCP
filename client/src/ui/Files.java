@@ -15,10 +15,24 @@ public class Files extends JPanel {
 		this.gui = gui;
 		setLayout( new GridLayout(1,2) );
 	    setBorder( new TitledBorder( "Files" ) );
-	    setBackground( Color.WHITE );
 	    
-		downloads = new Downloads();
-		downloadables = new Downloadables();
+		downloads = new Downloads(gui);
+		downloadables = new Downloadables(gui);
+		
+		add(downloads);
+		add(downloadables);
+	}
+	
+	public void updateDownloads(String[] files) {
+		for(int i=0; i<files.length; i++) {
+			downloads.addFile(files[i]);
+		}
+	}
+	
+	public void updateDownloadables(String[] files) {
+		for(int i=0; i<files.length; i++) {
+			downloadables.addFile(files[i]);
+		}
 	}
 
 }

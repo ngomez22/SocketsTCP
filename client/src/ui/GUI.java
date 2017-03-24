@@ -44,6 +44,14 @@ public class GUI extends JFrame {
 		connection.changeStatus(status);
 	}
 	
+	public void getDownloads() {
+		
+	}
+	
+	public void getDownloadables() {
+		
+	}
+	
 	public static void main(String[] args) {
 		GUI i = new GUI();
 		i.setVisible(true);
