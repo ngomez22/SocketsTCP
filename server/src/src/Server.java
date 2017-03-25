@@ -24,6 +24,7 @@ public class Server extends Thread {
 		buffer = new byte[BUFFER_SIZE];
 		clientSocket = cSocket;
 		try {
+			clientSocket.setSoTimeout(100 * 60 * 5);
 			input = new DataInputStream(clientSocket.getInputStream());
 			output = new DataOutputStream(clientSocket.getOutputStream());
 			active = true;
@@ -81,33 +82,26 @@ public class Server extends Thread {
 			String fName = input.readUTF();
 			System.out.println("Starting download of " + fName);
 			File file = new File("./files/" + fName);
-	        FileInputStream fis = new FileInputStream(file);
-	        BufferedInputStream bis = new BufferedInputStream(fis); 
-	                
-	        long fileLength = file.length(); 
-	        int numChunks = (int)(fileLength/BUFFER_SIZE);
-	        System.out.println("Number of chunks: " + numChunks);
-	        output.writeInt(numChunks);
-	        
-	        byte[] contents;
-	        long current = 0;
-	        while(current != fileLength){ 
-	            int size = BUFFER_SIZE;
-	            if(fileLength - current >= size)
-	                current += size;    
-	            else{ 
-	                size = (int)(fileLength - current); 
-	                current = fileLength;
-	            } 
-	            contents = new byte[size]; 
-	            bis.read(contents, 0, size); 
-	            output.write(contents);
-	            System.out.println("Sending file ... "+(current*100)/fileLength+"% complete!");
-	        }
-	        output.flush();
-	        System.out.println("File sent succesfully!");
-	        return true;
-		} catch(IOException e) {
+			FileInputStream fis = new FileInputStream(file);
+			BufferedInputStream bis = new BufferedInputStream(fis);
+
+			long fileLength = file.length();
+			int numChunks = (int) Math.ceil(fileLength / BUFFER_SIZE);
+			System.out.println("Number of chunks: " + numChunks);
+
+			clientSocket.setReceiveBufferSize(BUFFER_SIZE);
+
+			byte[] contents = new byte[BUFFER_SIZE];
+			long current = 0;
+			int count;
+			while ((count = fis.read(contents)) > -1) {
+				output.write(contents, 0, count);
+				current += count;
+				System.out.println("Sending file ... " + (current * 100) / fileLength + "% complete!");
+			}
+			System.out.println("File sent succesfully!");
+			return true;
+		} catch (IOException e) {
 			return false;
 		}
 	}

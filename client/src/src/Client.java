@@ -69,6 +69,7 @@ public class Client {
 	}
 
 	public void downloadFile(String fname) throws IOException {
+		System.out.println("Downloading " + fname);
 		FileOutputStream fos = new FileOutputStream(new File("./downloads/" + fname));
 		BufferedOutputStream bos = new BufferedOutputStream(fos);
 		output.writeUTF("DOWNLOAD");
@@ -76,15 +77,12 @@ public class Client {
 		int bytesRead = 0;
 		byte[] chunk = new byte[BUFFER_SIZE]; 
 		
-		int i = input.readInt();
-		while (i>=0){
-			bytesRead = input.read(chunk);
-			printChunk(chunk, i);
+		while ((bytesRead = input.read(chunk)) > 0){
+			System.out.println(bytesRead);
 			bos.write(chunk, 0, bytesRead);
-			i--;
 		}
+		
 		bos.flush();
-		socket.close();
 		System.out.println("File saved successfully!");
 	}
 

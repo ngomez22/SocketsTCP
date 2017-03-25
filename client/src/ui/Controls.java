@@ -44,7 +44,7 @@ public class Controls extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if (arg0.getActionCommand().equals(DOWNLOAD)) {
-			gui.download("test.jpg");
+			gui.download("med.jpg");
 		}
 		if (arg0.getActionCommand().equals(STOP)) {
 

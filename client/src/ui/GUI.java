@@ -73,7 +73,6 @@ public class GUI extends JFrame {
 
 	public void download(String fname) {
 		try {
-			System.out.println("Downloading " + fname);
 			client.downloadFile(fname);
 			files.updateDownloads(client.getDownloads());
 		} catch (Exception e) {
