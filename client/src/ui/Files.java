@@ -24,12 +24,14 @@ public class Files extends JPanel {
 	}
 	
 	public void updateDownloads(String[] files) {
+		downloads.emptyList();
 		for(int i=0; i<files.length; i++) {
 			downloads.addFile(files[i]);
 		}
 	}
 	
 	public void updateDownloadables(String[] files) {
+		downloadables.emptyList();
 		for(int i=0; i<files.length; i++) {
 			downloadables.addFile(files[i]);
 		}

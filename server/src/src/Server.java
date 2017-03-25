@@ -76,54 +76,40 @@ public class Server extends Thread {
 		}
 	}
 
-	public void sendFile() {
-		FileInputStream fileInputStream;
+	public boolean sendFile() {
 		try {
-			String pName = input.readUTF();
-			File file = new File("./files/" + pName);
-			fileInputStream = new FileInputStream(file);
-			byte[] buffer = new byte[BUFFER_SIZE];
-			int read;
-			int readTotal = 0;
-			while ((read = fileInputStream.read(buffer)) != -1) {
-				output.write(buffer, 0, read);
-				readTotal += read;
-			}
-		} catch (FileNotFoundException e) {
-			System.out.println("Couldn't find file");
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			String fName = input.readUTF();
+			System.out.println("Starting download of " + fName);
+			File file = new File("./files/" + fName);
+	        FileInputStream fis = new FileInputStream(file);
+	        BufferedInputStream bis = new BufferedInputStream(fis); 
+	                
+	        long fileLength = file.length(); 
+	        int numChunks = (int)(fileLength/BUFFER_SIZE);
+	        System.out.println("Number of chunks: " + numChunks);
+	        output.writeInt(numChunks);
+	        
+	        byte[] contents;
+	        long current = 0;
+	        while(current != fileLength){ 
+	            int size = BUFFER_SIZE;
+	            if(fileLength - current >= size)
+	                current += size;    
+	            else{ 
+	                size = (int)(fileLength - current); 
+	                current = fileLength;
+	            } 
+	            contents = new byte[size]; 
+	            bis.read(contents, 0, size); 
+	            output.write(contents);
+	            System.out.println("Sending file ... "+(current*100)/fileLength+"% complete!");
+	        }
+	        output.flush();
+	        System.out.println("File sent succesfully!");
+	        return true;
+		} catch(IOException e) {
+			return false;
 		}
-	}
-
-	public void sendFile(String fName) throws IOException {
-		File file = new File("./files/");
-        FileInputStream fis = new FileInputStream(file);
-        BufferedInputStream bis = new BufferedInputStream(fis); 
-                
-        //Read File Contents into contents array 
-        byte[] contents;
-        long fileLength = file.length(); 
-        long current = 0;
-         
-        long start = System.nanoTime();
-        while(current!=fileLength){ 
-            int size = 10000;
-            if(fileLength - current >= size)
-                current += size;    
-            else{ 
-                size = (int)(fileLength - current); 
-                current = fileLength;
-            } 
-            contents = new byte[size]; 
-            bis.read(contents, 0, size); 
-            output.write(contents);
-            System.out.print("Sending file ... "+(current*100)/fileLength+"% complete!");
-        }   
-        
-        output.flush();
-        System.out.println("File sent succesfully!");
 	}
 
 	public void done() {
@@ -142,6 +128,7 @@ public class Server extends Thread {
 	public void run() {
 		while (active) {
 			try {
+				System.out.println("waiting for request");
 				String request = input.readUTF();
 				handleRequest(request);
 			} catch (IOException e) {

@@ -44,4 +44,9 @@ public class Downloadables extends JPanel {
         if(!alreadyExists) dlf.addElement( file );
         list.setModel( dlf );
 	}
+	
+	public void emptyList() {
+		DefaultListModel dlf = new DefaultListModel( );
+        list.setModel( dlf );
+	}
 }

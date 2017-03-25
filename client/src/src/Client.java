@@ -75,13 +75,16 @@ public class Client {
 		output.writeUTF(fname);
 		int bytesRead = 0;
 		byte[] chunk = new byte[BUFFER_SIZE]; 
-		while ((bytesRead = input.read(chunk)) != -1){
-			System.out.println(chunk);
+		
+		int i = input.readInt();
+		while (i>=0){
+			bytesRead = input.read(chunk);
+			printChunk(chunk, i);
 			bos.write(chunk, 0, bytesRead);
+			i--;
 		}
 		bos.flush();
 		socket.close();
-
 		System.out.println("File saved successfully!");
 	}
 
@@ -94,5 +97,9 @@ public class Client {
 				files += listOfFiles[i].getName() + ",";
 		}
 		return files.split(",");
+	}
+	
+	public void printChunk(byte[] chunk, int num) {
+		System.out.println("Receving packet #" + num + ": " + chunk.toString());
 	}
 }

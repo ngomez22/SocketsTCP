@@ -75,6 +75,7 @@ public class GUI extends JFrame {
 		try {
 			System.out.println("Downloading " + fname);
 			client.downloadFile(fname);
+			files.updateDownloads(client.getDownloads());
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, "Error downloading file", "Download", JOptionPane.ERROR_MESSAGE);
 		}
