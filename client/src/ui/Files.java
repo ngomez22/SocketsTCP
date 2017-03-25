@@ -36,5 +36,9 @@ public class Files extends JPanel {
 			downloadables.addFile(files[i]);
 		}
 	}
+	
+	public String getSelectedDownload() {
+		return downloadables.selected();
+	}
 
 }

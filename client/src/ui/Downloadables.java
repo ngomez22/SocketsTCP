@@ -49,4 +49,8 @@ public class Downloadables extends JPanel {
 		DefaultListModel dlf = new DefaultListModel( );
         list.setModel( dlf );
 	}
+	
+	public String selected() {
+		return (String)list.getSelectedValue();
+	}
 }

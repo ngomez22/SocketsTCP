@@ -36,7 +36,8 @@ public class GUI extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				if (client != null) {
-					int confirmed = JOptionPane.showConfirmDialog(null, "Are you sure you want to end the connection?", "TCP Client", JOptionPane.YES_NO_OPTION);
+					int confirmed = JOptionPane.showConfirmDialog(null, "Are you sure you want to end the connection?",
+							"TCP Client", JOptionPane.YES_NO_OPTION);
 					if (confirmed == JOptionPane.YES_OPTION) {
 						client.endConnection();
 						dispose();
@@ -71,12 +72,17 @@ public class GUI extends JFrame {
 		}
 	}
 
-	public void download(String fname) {
-		try {
-			client.downloadFile(fname);
-			files.updateDownloads(client.getDownloads());
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(this, "Error downloading file", "Download", JOptionPane.ERROR_MESSAGE);
+	public void download() {
+		String fname = files.getSelectedDownload();
+		if (fname == null) {
+			JOptionPane.showMessageDialog(this, "Please select a file to download", "Download", JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			try {
+				client.downloadFile(fname);
+				files.updateDownloads(client.getDownloads());
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, "Error downloading file", "Download", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 
