@@ -37,27 +37,34 @@ public class Client {
 		} catch (IllegalArgumentException | NullPointerException | UnknownHostException e) {
 			return "INVALID PARAMETERS. ABORTING CONNECTION";
 		} catch (IOException e) {
-			return "COULD NOT ESTABLISH CONNECITON";
+			return "COULD NOT ESTABLISH CONNECTION";
 		}
 	}
 	
 	public String[] getFiles() {
-		try {
-			output.writeUTF("GET FILES");
-			return input.readUTF().split(",");
-		} catch (IOException e) {
-			e.printStackTrace();
-			return new String[0];
+		if(socket != null) {
+			try {
+				output.writeUTF("GET FILES");
+				return input.readUTF().split(",");
+			} catch (IOException e) {
+				e.printStackTrace();
+				return new String[0];
+			}
 		}
+		return new String[0];
 	}
 	
 	public String endConnection() {
-		try {
-			socket.close();
-			return "Connection terminated. Bye!";
-		} catch (IOException e) {
-			return "Error terminating connection! " + e.getMessage();
+		if(socket != null) {
+			try {
+				output.writeUTF("END");
+				socket.close();
+				return "Connection terminated. Bye!";
+			} catch (IOException e) {
+				return "Error terminating connection! " + e.getMessage();
+			}
 		}
+		return "No connection to terminate";
 	}
 
 	public boolean getFile(String fname) throws FileNotFoundException {

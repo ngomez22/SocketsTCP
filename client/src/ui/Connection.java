@@ -57,11 +57,9 @@ public class Connection extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals(CONNECT)) {
 			gui.connect();
-			disconnectButton();
 		}
 		if(e.getActionCommand().equals(DISCONNECT)) {
 			gui.disconnect();
-			connectButton();
 		}
 	}
 }

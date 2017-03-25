@@ -15,7 +15,6 @@ public class GUI extends JFrame {
 	private Controls controls;
 
 	public GUI () {
-		
 		connection = new Connection(this);
 		files = new Files(this);
 		files.setVisible(false);
@@ -33,20 +32,35 @@ public class GUI extends JFrame {
         add(controls, BorderLayout.SOUTH);
 	}
 	
+	public void showPanels() {
+		files.setVisible(true);
+		controls.setVisible(true);
+	}
+	
+	public void hidePanels() {
+		files.setVisible(false);
+		controls.setVisible(false);
+	}
+	
 	public void connect() {
 		client = new Client();
 		String status = client.startConnection();
 		System.out.println(status);
 		connection.changeStatus(status);
-		getDownloads();
-		getDownloadables();
-		files.setVisible(true);
+		if(status.startsWith("SUCCESS")) {
+			getDownloads();
+			getDownloadables();
+			showPanels();
+			connection.disconnectButton();
+		}
 	}
 	
 	public void disconnect() {
 		String status = client.endConnection();
 		System.out.println(status);
 		connection.changeStatus(status);
+		connection.connectButton();
+		hidePanels();
 	}
 	
 	public void getDownloadables() {
@@ -63,5 +77,4 @@ public class GUI extends JFrame {
 		GUI i = new GUI();
 		i.setVisible(true);
 	}
-
 }

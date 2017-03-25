@@ -12,6 +12,7 @@ import java.net.Socket;
 
 public class Server extends Thread {
 
+	private boolean active;
 	private Socket clientSocket;
 	private DataInputStream input;
 	private DataOutputStream output;
@@ -24,19 +25,31 @@ public class Server extends Thread {
 		clientSocket = cSocket;
 		try {
 			input = new DataInputStream(clientSocket.getInputStream());
-			//input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			output = new DataOutputStream(clientSocket.getOutputStream());
+			active = true;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
 	}
 	
 	public void handleRequest(String request) {
+		System.out.println("REQUEST: " + request);
 		switch(request) {
-			case "GET FILES": sendAvailableFiles();
-			case "DOWNLOAD": sendFile();
-			case "OK": done();
-			default: error();
+			case "GET FILES": 
+				sendAvailableFiles();
+				break;
+			case "DOWNLOAD": 
+				sendFile();
+				break;
+			case "OK": 
+				done();
+				break;
+			case "END": 
+				end();
+				break;
+			default: 
+				error();
+				break;
 		}
 	}
 
@@ -112,10 +125,15 @@ public class Server extends Thread {
 	public void error() {
 		System.out.println("ERROOOOORRRRRRRR");
 	}
+	
+	public void end() {
+		System.out.println("Ending");
+		active = false;
+	}
 
 
 	public void run() {
-		while(true) {
+		while(active) {
 			try {
 				String request = input.readUTF();
 				handleRequest(request);
@@ -123,7 +141,11 @@ public class Server extends Thread {
 				e.printStackTrace();
 			}
 		}
-		//No olvidar cerrar socket
+		try {
+			clientSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
