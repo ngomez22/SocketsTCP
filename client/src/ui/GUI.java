@@ -73,10 +73,10 @@ public class GUI extends JFrame {
 
 	public void download(String fname) {
 		try {
-			System.out.println("hola");
-			client.getFile(fname);
-		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(this, "No such file exists", "Download", JOptionPane.ERROR_MESSAGE);
+			System.out.println("Downloading " + fname);
+			client.downloadFile(fname);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Error downloading file", "Download", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
