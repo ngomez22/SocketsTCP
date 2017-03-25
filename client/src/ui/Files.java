@@ -19,8 +19,8 @@ public class Files extends JPanel {
 		downloads = new Downloads(gui);
 		downloadables = new Downloadables(gui);
 		
-		add(downloads);
 		add(downloadables);
+		add(downloads);
 	}
 	
 	public void updateDownloads(String[] files) {

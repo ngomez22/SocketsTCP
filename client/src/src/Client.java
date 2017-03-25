@@ -8,7 +8,7 @@ public class Client {
 	public static final int PORT = 4321;
 	public static final String HOST = "127.0.0.1";
 
-	private static Socket socket;
+	private Socket socket;
 	private DataInputStream input;
 	private DataOutputStream output;
 	private String[] files;
@@ -31,6 +31,8 @@ public class Client {
 	public String startConnection() {
 		try {
 			socket = new Socket(HOST, PORT);
+			input = new DataInputStream(socket.getInputStream());
+			output = new DataOutputStream(socket.getOutputStream());
 			return "SUCCESSFULLY CONNECTED TO " + HOST + ":" + PORT + ".\n";
 		} catch (IllegalArgumentException | NullPointerException | UnknownHostException e) {
 			return "INVALID PARAMETERS. ABORTING CONNECTION";
@@ -39,14 +41,13 @@ public class Client {
 		}
 	}
 	
-	public String getFiles(String status) throws IOException {
-		if (!status.startsWith("SUCCESS")) {
-			return "Bye!";
-		} else {
-			input = new DataInputStream(socket.getInputStream());
-			output = new DataOutputStream(socket.getOutputStream());
-			files = input.readUTF().split(",");
-			return "GOT FILES";
+	public String[] getFiles() {
+		try {
+			output.writeUTF("GET FILES");
+			return input.readUTF().split(",");
+		} catch (IOException e) {
+			e.printStackTrace();
+			return new String[0];
 		}
 	}
 	

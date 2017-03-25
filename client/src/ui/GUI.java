@@ -18,7 +18,9 @@ public class GUI extends JFrame {
 		
 		connection = new Connection(this);
 		files = new Files(this);
+		files.setVisible(false);
 		controls = new Controls(this);
+		controls.setVisible(false);
 		
 		setSize( 530, 530 );
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
@@ -36,6 +38,9 @@ public class GUI extends JFrame {
 		String status = client.startConnection();
 		System.out.println(status);
 		connection.changeStatus(status);
+		getDownloads();
+		getDownloadables();
+		files.setVisible(true);
 	}
 	
 	public void disconnect() {
@@ -44,12 +49,14 @@ public class GUI extends JFrame {
 		connection.changeStatus(status);
 	}
 	
-	public void getDownloads() {
-		
+	public void getDownloadables() {
+		String[] downloadables = client.getFiles();
+		files.updateDownloadables(downloadables);
 	}
 	
-	public void getDownloadables() {
-		
+	public void getDownloads() {
+		String[] downloads = client.getDownloads();
+		files.updateDownloads(downloads);
 	}
 	
 	public static void main(String[] args) {
