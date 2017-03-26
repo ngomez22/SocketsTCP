@@ -18,13 +18,15 @@ public class Server extends Thread {
 	private static final int MSG_SIZE = 3072;
 	private static final int TIMEOUT = 60000;
 	
+	private StartServer startServer;
 	private boolean active;
 	private Socket clientSocket;
 	private DataInputStream input;
 	private DataOutputStream output;
 	private byte[] buffer;
 
-	public Server(Socket cSocket) {
+	public Server(Socket cSocket, StartServer st) {
+		startServer = st;
 		buffer = new byte[MSG_SIZE];
 		clientSocket = cSocket;
 		try {
@@ -134,6 +136,7 @@ public class Server extends Thread {
 			}
 		}
 		try {
+			startServer.removeClient();
 			clientSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
