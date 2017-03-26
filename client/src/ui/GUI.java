@@ -76,10 +76,18 @@ public class GUI extends JFrame {
 		if (fname == null) {
 			JOptionPane.showMessageDialog(this, "Please select a file to download", "Download", JOptionPane.INFORMATION_MESSAGE);
 		} else {
-			try {
-				client.download(fname);
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(this, "Error downloading file", "Download", JOptionPane.ERROR_MESSAGE);
+			if(client.isClosed()) {
+				client = null;
+				connection.changeStatus("TIMEOUT");
+				connection.connectButton();
+				hidePanels();
+				JOptionPane.showMessageDialog(this, "You are no longer connected to the server. Restart your connection to continue", "Download", JOptionPane.ERROR_MESSAGE);
+			} else {
+				try {
+					client.download(fname);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(this, "Error downloading file", "Download", JOptionPane.ERROR_MESSAGE);
+				}	
 			}
 		}
 	}
@@ -89,7 +97,8 @@ public class GUI extends JFrame {
 		if(!stopped) {
 			JOptionPane.showMessageDialog(this, "No active download", "Download", JOptionPane.ERROR_MESSAGE);
 		} else {
-			JOptionPane.showMessageDialog(this, "Download stopped. Restart your connection to avoid issues", "Download", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Download stopped. Restarting your connection..", "Download", JOptionPane.INFORMATION_MESSAGE);
+			connect();
 		}
 	}
 	

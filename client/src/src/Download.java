@@ -47,8 +47,13 @@ public class Download extends Thread {
 				total += bytesRead;
 				i++;
 			}
+			if(downloading) {
+				System.out.println("Transfer completed! File saved successfully");
+			} else {
+				System.out.println("Download cancelled");
+				output.writeUTF("END");
+			}
 			bos.flush();
-			System.out.println("Transfer completed! File saved successfully");
 		} catch(IOException e) {
 			System.out.println("Error");
 		}

@@ -125,8 +125,7 @@ public class Server extends Thread {
 				String request = input.readUTF();
 				handleRequest(request);
 			} catch (IOException e) {
-				System.out.println(e.getClass());
-				System.out.println(e.getMessage());
+				end();
 			}
 		}
 		try {

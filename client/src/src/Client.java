@@ -92,4 +92,8 @@ public class Client {
 		}
 		return files.split(",");
 	}
+	
+	public boolean isClosed() {
+		return socket.isClosed();
+	}
 }
