@@ -7,15 +7,15 @@ public class Client {
 
 	public static final int PORT = 4321;
 	public static final String HOST = "127.0.0.1";
-	private static final int BUFFER_SIZE = 5000;
+	public static final int BUFFER_SIZE = 5000;
 
 	private Socket socket;
 	private DataInputStream input;
 	private DataOutputStream output;
 	private String[] files;
+	private Download download;
 
 	public void test() throws Exception {
-		// Initialize socket
 		String status = startConnection();
 		System.out.println(status);
 
@@ -89,6 +89,19 @@ public class Client {
 		
 		bos.flush();
 		System.out.println("File saved successfully!");
+	}
+	
+	public void download(String fname) throws IOException {
+		download = new Download(fname, output, input);
+		download.start();
+	}
+	
+	public boolean cancelDownload() {
+		if(download.isAlive() && download!=null) {
+			download.exit();
+			return true;
+		}
+		return false;
 	}
 
 	public String[] getDownloads() {

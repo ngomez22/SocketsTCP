@@ -77,11 +77,19 @@ public class GUI extends JFrame {
 			JOptionPane.showMessageDialog(this, "Please select a file to download", "Download", JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			try {
-				client.downloadFile(fname);
-				files.updateDownloads(client.getDownloads());
+				client.download(fname);
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(this, "Error downloading file", "Download", JOptionPane.ERROR_MESSAGE);
 			}
+		}
+	}
+	
+	public void stopDownload() {
+		boolean stopped = client.cancelDownload();
+		if(!stopped) {
+			JOptionPane.showMessageDialog(this, "No active download", "Download", JOptionPane.ERROR_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(this, "Download stopped. Restart your connection to avoid issues", "Download", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 	

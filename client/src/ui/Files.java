@@ -44,5 +44,4 @@ public class Files extends JPanel {
 	public String getSelectedToOpen() {
 		return downloads.selected();
 	}
-
 }

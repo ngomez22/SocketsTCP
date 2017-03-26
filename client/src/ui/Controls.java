@@ -27,18 +27,10 @@ public class Controls extends JPanel implements ActionListener {
 		stopBtn = new JButton("Stop");
 		stopBtn.addActionListener(this);
 		stopBtn.setActionCommand(STOP);
-		stopBtn.setEnabled(false);
+		stopBtn.setEnabled(true);
 
 		add(downloadBtn);
 		add(stopBtn);
-	}
-	
-	public void enableStop() {
-		stopBtn.setEnabled(true);
-	}
-	
-	public void disableStop() {
-		stopBtn.setEnabled(false);
 	}
 
 	@Override
@@ -47,7 +39,7 @@ public class Controls extends JPanel implements ActionListener {
 			gui.download();
 		}
 		if (arg0.getActionCommand().equals(STOP)) {
-
+			gui.stopDownload();
 		}
 	}
 }
