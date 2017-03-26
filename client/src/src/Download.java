@@ -33,6 +33,7 @@ public class Download extends Thread {
 			long start = System.currentTimeMillis();
 			System.out.println("Downloading " + fname + " - Time: " + start);
 			System.out.println("Buffer size: " + bufferSize);
+			System.out.println("Message size: " + Client.MSG_SIZE);
 			FileOutputStream fos = new FileOutputStream(new File("./downloads/" + fname));
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			output.writeUTF("DOWNLOAD");

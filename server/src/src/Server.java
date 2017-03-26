@@ -15,7 +15,7 @@ import java.net.SocketTimeoutException;
 public class Server extends Thread {
 
 	private static final int BUFFER_SIZE = 4096;
-	private static final int MSG_SIZE = 4096;
+	private static final int MSG_SIZE = 3072;
 	private static final int TIMEOUT = 60000;
 	
 	private boolean active;
