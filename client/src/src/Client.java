@@ -2,6 +2,7 @@ package src;
 
 import java.io.*;
 import java.net.*;
+import java.util.Arrays;
 
 public class Client {
 
@@ -67,29 +68,6 @@ public class Client {
 		}
 		return "No connection to terminate";
 	}
-
-	public void downloadFile(String fname) throws IOException {
-		System.out.println("Downloading " + fname);
-		FileOutputStream fos = new FileOutputStream(new File("./downloads/" + fname));
-		BufferedOutputStream bos = new BufferedOutputStream(fos);
-		output.writeUTF("DOWNLOAD");
-		output.writeUTF(fname);
-		
-		long fileLength = input.readLong();
-		
-		int total = 0;
-		int bytesRead = 0;
-		byte[] chunk = new byte[BUFFER_SIZE];
-		while ( total < fileLength ){
-			bytesRead = input.read(chunk);
-			System.out.println(total + " - "  + fileLength);
-			bos.write(chunk, 0, bytesRead);
-			total += bytesRead;
-		}
-		
-		bos.flush();
-		System.out.println("File saved successfully!");
-	}
 	
 	public void download(String fname) throws IOException {
 		download = new Download(fname, output, input);
@@ -113,9 +91,5 @@ public class Client {
 				files += listOfFiles[i].getName() + ",";
 		}
 		return files.split(",");
-	}
-	
-	public void printChunk(byte[] chunk, int num) {
-		System.out.println("Receving packet #" + num + ": " + chunk.toString());
 	}
 }

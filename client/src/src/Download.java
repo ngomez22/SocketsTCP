@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Download extends Thread {
 	
@@ -37,17 +38,24 @@ public class Download extends Thread {
 			
 			int total = 0;
 			int bytesRead = 0;
+			int i = 1;
 			byte[] chunk = new byte[Client.BUFFER_SIZE];
 			while ( total < fileLength && downloading ){
 				bytesRead = input.read(chunk);
-				System.out.println(total + " - "  + fileLength);
+				printChunk(chunk, i);
 				bos.write(chunk, 0, bytesRead);
 				total += bytesRead;
+				i++;
 			}
 			bos.flush();
+			System.out.println("Transfer completed! File saved successfully");
 		} catch(IOException e) {
 			System.out.println("Error");
 		}
+	}
+	
+	public void printChunk(byte[] chunk, int num) {
+		System.out.println("Receving packet #" + num + ": " + Arrays.toString(chunk));
 	}
 
 }

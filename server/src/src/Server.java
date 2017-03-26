@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 public class Server extends Thread {
 
@@ -24,7 +25,7 @@ public class Server extends Thread {
 		buffer = new byte[BUFFER_SIZE];
 		clientSocket = cSocket;
 		try {
-			clientSocket.setSoTimeout(100 * 60 * 5);
+			clientSocket.setSoTimeout(1000 * 60 * 5);
 			input = new DataInputStream(clientSocket.getInputStream());
 			output = new DataOutputStream(clientSocket.getOutputStream());
 			active = true;
@@ -121,11 +122,11 @@ public class Server extends Thread {
 	public void run() {
 		while (active) {
 			try {
-				System.out.println("waiting for request");
 				String request = input.readUTF();
 				handleRequest(request);
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.out.println(e.getClass());
+				System.out.println(e.getMessage());
 			}
 		}
 		try {
