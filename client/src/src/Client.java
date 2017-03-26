@@ -74,12 +74,17 @@ public class Client {
 		BufferedOutputStream bos = new BufferedOutputStream(fos);
 		output.writeUTF("DOWNLOAD");
 		output.writeUTF(fname);
-		int bytesRead = 0;
-		byte[] chunk = new byte[BUFFER_SIZE]; 
 		
-		while ((bytesRead = input.read(chunk)) > 0){
-			System.out.println(bytesRead);
+		long fileLength = input.readLong();
+		
+		int total = 0;
+		int bytesRead = 0;
+		byte[] chunk = new byte[BUFFER_SIZE];
+		while ( total < fileLength ){
+			bytesRead = input.read(chunk);
+			System.out.println(total + " - "  + fileLength);
 			bos.write(chunk, 0, bytesRead);
+			total += bytesRead;
 		}
 		
 		bos.flush();

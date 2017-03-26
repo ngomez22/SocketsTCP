@@ -86,8 +86,7 @@ public class Server extends Thread {
 			BufferedInputStream bis = new BufferedInputStream(fis);
 
 			long fileLength = file.length();
-			int numChunks = (int) Math.ceil(fileLength / BUFFER_SIZE);
-			System.out.println("Number of chunks: " + numChunks);
+			output.writeLong(fileLength);
 
 			clientSocket.setReceiveBufferSize(BUFFER_SIZE);
 
@@ -97,7 +96,7 @@ public class Server extends Thread {
 			while ((count = fis.read(contents)) > -1) {
 				output.write(contents, 0, count);
 				current += count;
-				System.out.println("Sending file ... " + (current * 100) / fileLength + "% complete!");
+				System.out.println("Sending file ... " + (current * 100) / fileLength + "% complete!" + count);
 			}
 			System.out.println("File sent succesfully!");
 			return true;
