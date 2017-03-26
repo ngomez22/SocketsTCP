@@ -14,7 +14,8 @@ import java.net.SocketTimeoutException;
 
 public class Server extends Thread {
 
-	private static final int BUFFER_SIZE = 5000;
+	private static final int BUFFER_SIZE = 4096;
+	private static final int MSG_SIZE = 4096;
 	private static final int TIMEOUT = 60000;
 	
 	private boolean active;
@@ -24,10 +25,12 @@ public class Server extends Thread {
 	private byte[] buffer;
 
 	public Server(Socket cSocket) {
-		buffer = new byte[BUFFER_SIZE];
+		buffer = new byte[MSG_SIZE];
 		clientSocket = cSocket;
 		try {
 			clientSocket.setSoTimeout(TIMEOUT);
+			clientSocket.setReceiveBufferSize(BUFFER_SIZE);
+			clientSocket.setSendBufferSize(BUFFER_SIZE);
 			input = new DataInputStream(clientSocket.getInputStream());
 			output = new DataOutputStream(clientSocket.getOutputStream());
 			active = true;
@@ -91,9 +94,9 @@ public class Server extends Thread {
 			long fileLength = file.length();
 			output.writeLong(fileLength);
 
-			clientSocket.setReceiveBufferSize(BUFFER_SIZE);
+			clientSocket.setReceiveBufferSize(MSG_SIZE);
 
-			byte[] contents = new byte[BUFFER_SIZE];
+			byte[] contents = new byte[MSG_SIZE];
 			long current = 0;
 			int count;
 			while ((count = fis.read(contents)) > -1) {

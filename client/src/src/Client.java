@@ -6,9 +6,10 @@ import java.util.Arrays;
 
 public class Client {
 
-	public static final int PORT = 4321;
 	public static final String HOST = "127.0.0.1";
-	public static final int BUFFER_SIZE = 5000;
+	public static final int PORT = 4321;
+	private static final int BUFFER_SIZE = 4096;
+	public static final int MSG_SIZE = 4096;
 
 	private Socket socket;
 	private DataInputStream input;
@@ -16,23 +17,11 @@ public class Client {
 	private String[] files;
 	private Download download;
 
-	public void test() throws Exception {
-		String status = startConnection();
-		System.out.println(status);
-
-		if (!status.startsWith("SUCCESS")) {
-			System.out.println("Bye");
-		} else {
-			input = new DataInputStream(socket.getInputStream());
-			output = new DataOutputStream(socket.getOutputStream());
-			files = input.readUTF().split(",");
-		}
-		socket.close();
-	}
-
 	public String startConnection() {
 		try {
 			socket = new Socket(HOST, PORT);
+			socket.setReceiveBufferSize(BUFFER_SIZE);
+			socket.setSendBufferSize(BUFFER_SIZE);
 			input = new DataInputStream(socket.getInputStream());
 			output = new DataOutputStream(socket.getOutputStream());
 			return "SUCCESSFULLY CONNECTED TO " + HOST + ":" + PORT + ".\n";
@@ -70,7 +59,7 @@ public class Client {
 	}
 	
 	public void download(String fname) throws IOException {
-		download = new Download(fname, output, input);
+		download = new Download(socket.getReceiveBufferSize(), fname, output, input);
 		download.start();
 	}
 	
