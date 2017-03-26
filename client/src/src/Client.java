@@ -8,8 +8,8 @@ public class Client {
 
 	public static final String HOST = "127.0.0.1";
 	public static final int PORT = 4321;
-	private static final int BUFFER_SIZE = 4096;
-	public static final int MSG_SIZE = 3072;
+	private static final int BUFFER_SIZE = 8192;
+	public static final int MSG_SIZE = 1024;
 
 	private Socket socket;
 	private DataInputStream input;
