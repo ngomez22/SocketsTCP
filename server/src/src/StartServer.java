@@ -7,7 +7,7 @@ import java.net.Socket;
 public class StartServer
 {
 	private static final int PORT = 4321;
-	private static final int MAX_CLIENTS = 100;
+	private static final int MAX_CLIENTS = 250;
 	private int clients = 0;
 	public StartServer()
 	{
@@ -22,6 +22,8 @@ public class StartServer
 		            System.out.println("Nuevo Cliente");
 		            addClient();
 		            new Server(clientSocket, this).start();
+		            //PARA PRUEBAS JMETER
+		            //new ServerJMeterTest(clientSocket, this).start();
 				} 
 				else
 				{}
