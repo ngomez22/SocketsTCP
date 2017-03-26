@@ -37,8 +37,12 @@ public class Files extends JPanel {
 		}
 	}
 	
-	public String getSelectedDownload() {
+	public String getSelectedForDownload() {
 		return downloadables.selected();
+	}
+	
+	public String getSelectedToOpen() {
+		return downloads.selected();
 	}
 
 }

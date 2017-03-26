@@ -3,17 +3,23 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
-public class Downloads extends JPanel {
+public class Downloads extends JPanel implements ActionListener {
+	
+	public static final String OPEN = "OPEN";
 	
 	private GUI gui;
 	private JList list;
+	private JButton openBtn;
 	
 	public Downloads (GUI gui) {
 		this.gui = gui;
@@ -28,7 +34,12 @@ public class Downloads extends JPanel {
         scroll.setVerticalScrollBarPolicy( javax.swing.JScrollPane.VERTICAL_SCROLLBAR_ALWAYS );
         scroll.setHorizontalScrollBarPolicy( javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
         list.setModel( new DefaultListModel( ) );
+        openBtn = new JButton("Open");
+        openBtn.addActionListener(this);
+        openBtn.setActionCommand(OPEN);
+        
         add(scroll, BorderLayout.CENTER);
+        add(openBtn, BorderLayout.SOUTH);
 	}
 	
 	public void addFile(String file) {
@@ -48,5 +59,16 @@ public class Downloads extends JPanel {
 	public void emptyList() {
 		DefaultListModel dlf = new DefaultListModel( );
         list.setModel( dlf );
+	}
+	
+	public String selected() {
+		return (String)list.getSelectedValue();
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getActionCommand().equals(OPEN)) {
+			gui.open();
+		}
 	}
 }

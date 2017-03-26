@@ -1,9 +1,12 @@
 package ui;
 
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.swing.*;
 
@@ -11,17 +14,16 @@ import src.Client;
 
 public class GUI extends JFrame {
 
+	private Desktop desktop;
 	private Client client;
 	private Connection connection;
 	private Files files;
-	private Controls controls;
 
 	public GUI() {
+		desktop = Desktop.getDesktop();
 		connection = new Connection(this);
 		files = new Files(this);
 		files.setVisible(false);
-		controls = new Controls(this);
-		controls.setVisible(false);
 
 		setSize(530, 530);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -31,7 +33,6 @@ public class GUI extends JFrame {
 
 		add(connection, BorderLayout.NORTH);
 		add(files, BorderLayout.CENTER);
-		add(controls, BorderLayout.SOUTH);
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -51,12 +52,10 @@ public class GUI extends JFrame {
 
 	public void showPanels() {
 		files.setVisible(true);
-		controls.setVisible(true);
 	}
 
 	public void hidePanels() {
 		files.setVisible(false);
-		controls.setVisible(false);
 	}
 
 	public void connect() {
@@ -73,7 +72,7 @@ public class GUI extends JFrame {
 	}
 
 	public void download() {
-		String fname = files.getSelectedDownload();
+		String fname = files.getSelectedForDownload();
 		if (fname == null) {
 			JOptionPane.showMessageDialog(this, "Please select a file to download", "Download", JOptionPane.INFORMATION_MESSAGE);
 		} else {
@@ -82,6 +81,19 @@ public class GUI extends JFrame {
 				files.updateDownloads(client.getDownloads());
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(this, "Error downloading file", "Download", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+	
+	public void open() {
+		String fname = files.getSelectedToOpen();
+		if (fname == null) {
+			JOptionPane.showMessageDialog(this, "Please select a file to open", "Downloads", JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			try {
+				desktop.open(new File("./downloads/" + fname));
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(this, "Couldn't open the selected file", "Downloads", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}

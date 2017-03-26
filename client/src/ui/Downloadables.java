@@ -3,20 +3,26 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 public class Downloadables extends JPanel {
 	
 	private GUI gui;
+	private Controls controls;
 	private JList list;
 	
 	public Downloadables (GUI gui) {
 		this.gui = gui;
+		controls = new Controls(gui);
 		setLayout( new BorderLayout() );
 	    setBorder( new TitledBorder( "Downloadables" ) );
 	    setBackground( Color.WHITE );
@@ -28,7 +34,9 @@ public class Downloadables extends JPanel {
         scroll.setVerticalScrollBarPolicy( javax.swing.JScrollPane.VERTICAL_SCROLLBAR_ALWAYS );
         scroll.setHorizontalScrollBarPolicy( javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
         list.setModel( new DefaultListModel( ) );
+        
         add(scroll, BorderLayout.CENTER);
+        add(controls, BorderLayout.SOUTH);
 	}
 	
 	public void addFile(String file) {
