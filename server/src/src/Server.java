@@ -14,18 +14,20 @@ import java.net.SocketTimeoutException;
 
 public class Server extends Thread {
 
+	private static final int BUFFER_SIZE = 5000;
+	private static final int TIMEOUT = 60000;
+	
 	private boolean active;
 	private Socket clientSocket;
 	private DataInputStream input;
 	private DataOutputStream output;
 	private byte[] buffer;
-	private static final int BUFFER_SIZE = 5000;
 
 	public Server(Socket cSocket) {
 		buffer = new byte[BUFFER_SIZE];
 		clientSocket = cSocket;
 		try {
-			clientSocket.setSoTimeout(1000 * 60 * 5);
+			clientSocket.setSoTimeout(TIMEOUT);
 			input = new DataInputStream(clientSocket.getInputStream());
 			output = new DataOutputStream(clientSocket.getOutputStream());
 			active = true;
