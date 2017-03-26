@@ -3,6 +3,7 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -16,10 +17,12 @@ import javax.swing.border.TitledBorder;
 public class Downloads extends JPanel implements ActionListener {
 	
 	public static final String OPEN = "OPEN";
+	public static final String REFRESH = "REFRESH";
 	
 	private GUI gui;
 	private JList list;
 	private JButton openBtn;
+	private JButton refreshBtn;
 	
 	public Downloads (GUI gui) {
 		this.gui = gui;
@@ -37,9 +40,16 @@ public class Downloads extends JPanel implements ActionListener {
         openBtn = new JButton("Open");
         openBtn.addActionListener(this);
         openBtn.setActionCommand(OPEN);
+        refreshBtn = new JButton("Refresh");
+        refreshBtn.addActionListener(this);
+        refreshBtn.setActionCommand(REFRESH);
+        
+        JPanel buttons = new JPanel(new GridLayout(1, 2));
+        buttons.add(openBtn);
+        buttons.add(refreshBtn);
         
         add(scroll, BorderLayout.CENTER);
-        add(openBtn, BorderLayout.SOUTH);
+        add(buttons, BorderLayout.SOUTH);
 	}
 	
 	public void addFile(String file) {
@@ -69,6 +79,9 @@ public class Downloads extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals(OPEN)) {
 			gui.open();
+		}
+		if(e.getActionCommand().equals(REFRESH)); {
+			gui.getDownloads();
 		}
 	}
 }
