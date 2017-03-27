@@ -82,6 +82,7 @@ public class ServerJMeterTest extends Thread {
 	public void sendAvailableFiles() {
 		try {
 			output.writeUTF(getFileNames());
+			reqTEST="OK";
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -89,7 +90,8 @@ public class ServerJMeterTest extends Thread {
 
 	public boolean sendFile() {
 		try {
-			String fName = "small.jpg";
+			reqTEST = "OK";
+			String fName = "med.jpg";
 			System.out.println("Starting download of " + fName);
 			File file = new File("./files/" + fName);
 			FileInputStream fis = new FileInputStream(file);
@@ -106,10 +108,9 @@ public class ServerJMeterTest extends Thread {
 			while ((count = fis.read(contents)) > -1) {
 				output.write(contents, 0, count);
 				current += count;
-				System.out.println("Sending file ... " + (current * 100) / fileLength + "% complete!" + count);
+				//System.out.println("Sending file ... " + (current * 100) / fileLength + "% complete!" + count);
 			}
 			System.out.println("File sent succesfully!");
-			reqTEST = "OK";
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();

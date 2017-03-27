@@ -7,7 +7,7 @@ import java.net.Socket;
 public class StartServer
 {
 	private static final int PORT = 4321;
-	private static final int MAX_CLIENTS = 250;
+	private static final int MAX_CLIENTS = 20;
 	private int clients = 0;
 	public StartServer()
 	{
