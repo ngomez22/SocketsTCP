@@ -15,8 +15,8 @@ import java.net.SocketTimeoutException;
 public class Server extends Thread {
 
 	private static final int BUFFER_SIZE = 8192;
-	private static final int MSG_SIZE = 1024;
-	private static final int TIMEOUT = 60000;
+	private static final int MSG_SIZE = 5216;
+	private static final int TIMEOUT = 10000;
 	
 	private StartServer startServer;
 	private boolean active;
@@ -53,6 +53,9 @@ public class Server extends Thread {
 		case "OK":
 			done();
 			break;
+		case "STATUS":
+			sendStatus();
+			break;
 		case "END":
 			end();
 			break;
@@ -85,31 +88,39 @@ public class Server extends Thread {
 		}
 	}
 
-	public boolean sendFile() {
-		try {
-			String fName = input.readUTF();
-			System.out.println("Starting download of " + fName);
-			File file = new File("./files/" + fName);
-			FileInputStream fis = new FileInputStream(file);
-			BufferedInputStream bis = new BufferedInputStream(fis);
+	public void sendFile() {
+		if(!clientSocket.isClosed()) {
+			try {
+				String fName = input.readUTF();
+				System.out.println("Starting download of " + fName);
+				File file = new File("./files/" + fName);
+				FileInputStream fis = new FileInputStream(file);
+				BufferedInputStream bis = new BufferedInputStream(fis);
 
-			long fileLength = file.length();
-			output.writeLong(fileLength);
+				long fileLength = file.length();
+				output.writeLong(fileLength);
 
-			clientSocket.setReceiveBufferSize(MSG_SIZE);
+				clientSocket.setReceiveBufferSize(MSG_SIZE);
 
-			byte[] contents = new byte[MSG_SIZE];
-			long current = 0;
-			int count;
-			while ((count = fis.read(contents)) > -1) {
-				output.write(contents, 0, count);
-				current += count;
-				System.out.println("Sending file ... " + (current * 100) / fileLength + "% complete!" + count);
+				byte[] contents = new byte[MSG_SIZE];
+				long current = 0;
+				int count;
+				while ((count = fis.read(contents)) > -1) {
+					output.write(contents, 0, count);
+					current += count;
+				}
+				System.out.println("File sent succesfully!");
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			System.out.println("File sent succesfully!");
-			return true;
+		}
+	}
+	
+	public void sendStatus() {
+		try {
+			output.writeBoolean(active);
 		} catch (IOException e) {
-			return false;
+			e.printStackTrace();
 		}
 	}
 
@@ -138,6 +149,7 @@ public class Server extends Thread {
 		try {
 			startServer.removeClient();
 			clientSocket.close();
+			System.out.println("Client killed");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

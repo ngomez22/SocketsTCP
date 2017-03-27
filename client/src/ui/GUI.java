@@ -76,18 +76,17 @@ public class GUI extends JFrame {
 		if (fname == null) {
 			JOptionPane.showMessageDialog(this, "Please select a file to download", "Download", JOptionPane.INFORMATION_MESSAGE);
 		} else {
-			if(client.isClosed()) {
-				client = null;
-				connection.changeStatus("TIMEOUT");
-				connection.connectButton();
-				hidePanels();
-				JOptionPane.showMessageDialog(this, "You are no longer connected to the server. Restart your connection to continue", "Download", JOptionPane.ERROR_MESSAGE);
-			} else {
-				try {
-					client.download(fname);
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(this, "Error downloading file", "Download", JOptionPane.ERROR_MESSAGE);
-				}	
+			try {
+				boolean alive = client.download(fname);
+				if(!alive) {
+					client = null;
+					connection.changeStatus("TIMEOUT");
+					connection.connectButton();
+					hidePanels();
+					JOptionPane.showMessageDialog(this, "You are no longer connected to the server. Restart your connection to continue", "Download", JOptionPane.ERROR_MESSAGE);
+				}
+			} catch (IOException e1) {
+				JOptionPane.showMessageDialog(this, "Error downloading file", "Download", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}

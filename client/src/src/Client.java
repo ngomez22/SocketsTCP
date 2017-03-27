@@ -9,13 +9,14 @@ public class Client {
 	public static final String HOST = "127.0.0.1";
 	public static final int PORT = 4321;
 	private static final int BUFFER_SIZE = 8192;
-	public static final int MSG_SIZE = 1024;
+	public static final int MSG_SIZE = 5216;
+	private static final int TIMEOUT = 60000;
 
 	private Socket socket;
 	private DataInputStream input;
 	private DataOutputStream output;
-	private String[] files;
 	private Download download;
+	private Timeout timeout;
 
 	public String startConnection() {
 		try {
@@ -24,6 +25,7 @@ public class Client {
 			socket.setSendBufferSize(BUFFER_SIZE);
 			input = new DataInputStream(socket.getInputStream());
 			output = new DataOutputStream(socket.getOutputStream());
+			timeout = new Timeout();
 			return "SUCCESSFULLY CONNECTED TO " + HOST + ":" + PORT + ".\n";
 		} catch (IllegalArgumentException | NullPointerException | UnknownHostException e) {
 			return "INVALID PARAMETERS. ABORTING CONNECTION";
@@ -52,19 +54,26 @@ public class Client {
 				socket.close();
 				return "Connection terminated. Bye!";
 			} catch (IOException e) {
-				return "Error terminating connection! " + e.getMessage();
+				return "Error terminating connection!";
 			}
 		}
 		return "No connection to terminate";
 	}
 	
-	public void download(String fname) throws IOException {
-		download = new Download(socket.getReceiveBufferSize(), fname, output, input);
-		download.start();
+	public boolean download(String fname) throws IOException {
+		if(!timeout.timeout()) {
+			download = new Download(socket.getReceiveBufferSize(), fname, output, input);
+			download.start();
+			timeout.reset();
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 	public boolean cancelDownload() {
-		if(download.isAlive() && download!=null) {
+		if(download!=null && download.isAlive()) {
 			download.exit();
 			return true;
 		}
@@ -84,5 +93,22 @@ public class Client {
 	
 	public boolean isClosed() {
 		return socket.isClosed();
+	}
+	
+	public class Timeout {
+		
+		private long start;
+		
+		public Timeout() {
+			start = System.currentTimeMillis();
+		}
+		
+		public void reset() {
+			start = System.currentTimeMillis();
+		}
+		
+		public boolean timeout() {
+			return System.currentTimeMillis() - start > TIMEOUT;
+		}
 	}
 }
