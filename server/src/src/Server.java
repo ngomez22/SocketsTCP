@@ -16,7 +16,7 @@ public class Server extends Thread {
 
 	private static final int BUFFER_SIZE = 8192;
 	private static final int MSG_SIZE = 5216;
-	private static final int TIMEOUT = 10000;
+	private static final int TIMEOUT = 60000;
 	
 	private StartServer startServer;
 	private boolean active;

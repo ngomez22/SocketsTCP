@@ -47,7 +47,7 @@ public class Download extends Thread {
 			byte[] chunk = new byte[Client.MSG_SIZE];
 			while ( total < fileLength && downloading ){
 				bytesRead = input.read(chunk);
-				//printChunk(chunk, i);
+				printChunk(chunk, i);
 				bos.write(chunk, 0, bytesRead);
 				total += bytesRead;
 				i++;
